@@ -3,6 +3,8 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 'use strict';
 
+//Functional Library
+
 var _ = {};
 
 
@@ -17,9 +19,14 @@ var _ = {};
 * Objectives:
 *   1) Returns <value> unchanged
 * Examples:
-*   _.identity(5) === 5
-*   _.identity({a: "b"}) === {a: "b"}
+*   _.identity(5) ==> 5
+*   _.identity({a: "b"}) ==> {a: "b"}
 */
+
+_.identity = function(value) {
+    //return value unchanged
+    return value;
+}
 
 
 /** _.typeOf
@@ -42,6 +49,18 @@ var _ = {};
 * _.typeOf([1,2,3]) -> "array"
 */
 
+_.typeOf = function(value) {
+    //if value is an array return array
+   if (Array.isArray(value)) {
+    return 'array';
+   }
+   //if null return null
+   if (value === null) {
+    return 'null';
+   } //return typeofvalue
+   return typeof value;
+}  
+
 
 /** _.first
 * Arguments:
@@ -60,6 +79,9 @@ var _ = {};
 *   _.first(["a", "b", "c"], 1) -> "a"
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
+
+
+
 
 
 /** _.last
@@ -154,9 +176,34 @@ var _ = {};
 *   1) What if <function> returns something other than true or false?
 * Examples:
 *   _.filter([1,2,3,4,5], function(x){return x%2 === 0}) -> [2,4]
+*   _.filter(['alex', 'francis', 'aaron'], function(x){return x[0] === 'a'}); -> ['alex', 'francis']
 * Extra Credit:
 *   use _.each in your implementation
 */
+/*
+i:takes in an array and function
+o:returns a new array
+*/
+
+_.filter = function(array, func){
+    //create ouput array
+    let output = [];
+    //create a for loop to iterate over our array
+    for (let i = 0; i < array.length; i++){
+        //betermine if the result of invoking func is true
+        if (func(array[i], i, array) === true){
+            output.push(array[i]);
+        }
+    }
+    return output;
+}
+
+//filter
+    //callback function is used to 'test' each item in an array (retutns true/false)
+//map
+    //callback function takes in an item from the array and returns a new version
+
+
 
 
 /** _.reject
