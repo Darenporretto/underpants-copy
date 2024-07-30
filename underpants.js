@@ -80,7 +80,25 @@ _.typeOf = function(value) {
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
 
-
+    _.first = function(array, number) {
+    //is array is not an array
+    if (!Array.isArray(array)) {
+      return [];
+    }
+  
+    //check if number is not given or not a number
+    if (typeof number !== 'number' || isNaN(number)) {
+      return array[0];
+    }
+  
+    //input negative numbers
+    if (number < 0) {
+      return [];
+    }
+  
+    //return the first number items of the array, or the whole array if number is greater than array length
+    return array.slice(0, number);
+  }
 
 
 
@@ -102,6 +120,26 @@ _.typeOf = function(value) {
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
 
+    _.last = function(array, number) {
+    //check for if array is not an array
+    if (!Array.isArray(array)) {
+      return [];
+    }
+  
+    //make sure if number is not given or not a number
+    if (typeof number !== 'number' || isNaN(number)) {
+      return array[array.length - 1];
+    }
+  
+    //input negative numbers
+    if (number < 0) {
+      return [];
+    }
+  
+    //if number is greater than the array length, return the whole array
+    return array.slice(-number);
+  }
+
 
 /** _.indexOf
 * Arguments:
@@ -120,6 +158,24 @@ _.typeOf = function(value) {
 */
 
 
+    _.indexOf = function(array, value) {
+    //check if array is actually an array
+    if (!Array.isArray(array)) {
+      return -1;
+    }
+  
+    //iterate through the array
+    for (let i = 0; i < array.length; i++) {
+      if (array[i] === value) {
+        return i; //return the index of the first occurrence
+      }
+    }
+  
+    //if value is not found, return -1
+    return -1;
+  }
+
+
 /** _.contains
 * Arguments:
 *   1) An array
@@ -134,6 +190,14 @@ _.typeOf = function(value) {
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+    _.contains = function(array, value) {
+    //check if array is actually an array and is not empty
+    if (!Array.isArray(array)) {
+      return false;
+    }
+    //check if value is given sse the ternary operator to determine if the value is present in the array
+    return array.some(item => item === value) ? true : false;
+  }
 
 
 /** _.each
@@ -151,6 +215,24 @@ _.typeOf = function(value) {
 *   _.each(["a","b","c"], function(e,i,a){ console.log(e)});
 *      -> should log "a" "b" "c" to the console
 */
+    _.each = function(collection, callback) {
+    //check is the collection is an array
+    if (Array.isArray(collection)) {
+      //iterate over the array and call the callback with (element, index and collection)
+      for (let i = 0; i < collection.length; i++) {
+        callback(collection[i], i, collection);
+      }
+    } 
+    //check if the collection is an object
+    else if (typeof collection === 'object' && collection !== null) {
+      //iterate over the object's properties and call the callback with (value, key and collection)
+      for (const key in collection) {
+        if (collection.hasOwnProperty(key)) {
+          callback(collection[key], key, collection);
+        }
+      }
+    }
+  }
 
 
 /** _.unique
