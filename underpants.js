@@ -86,8 +86,8 @@ _.typeOf = function(value) {
       return [];
     }
   
-    //check if number is not given or not a number
-    if (typeof number !== 'number' || isNaN(number)) {
+    //check if number not a number
+    if (typeof number !== 'number') {
       return array[0];
     }
   
@@ -126,8 +126,8 @@ _.typeOf = function(value) {
       return [];
     }
   
-    //make sure if number is not given or not a number
-    if (typeof number !== 'number' || isNaN(number)) {
+    //make sure if number is not a number
+    if (typeof number !== 'number') {
       return array[array.length - 1];
     }
   
@@ -160,17 +160,12 @@ _.typeOf = function(value) {
 
     _.indexOf = function(array, value) {
     //check if array is actually an array
-    if (!Array.isArray(array)) {
-      return -1;
-    }
-  
     //iterate through the array
     for (let i = 0; i < array.length; i++) {
       if (array[i] === value) {
         return i; //return the index of the first occurrence
       }
     }
-  
     //if value is not found, return -1
     return -1;
   }
@@ -195,7 +190,7 @@ _.typeOf = function(value) {
     if (!Array.isArray(array)) {
       return false;
     }
-    //check if value is given sse the ternary operator to determine if the value is present in the array
+    //check if value is given use the ternary operator to determine if the value is present in the array
     return array.some(item => item === value) ? true : false;
   }
 
@@ -244,6 +239,28 @@ _.typeOf = function(value) {
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
+
+    _.unique = function(array) {
+    //check input is an array
+    if (!Array.isArray(array)) {
+      return [];
+    }
+  
+    //create empty array to store unique values
+    let result = [];
+  
+    //iterate over each element in the original array
+    for (let i = 0; i < array.length; i++) {
+      // use _.indexOf to check if elements is already in the result array
+      if (_.indexOf(result, array[i]) === -1) {
+        //if no add the element to the result array
+        result.push(array[i]);
+      }
+    }
+  
+    //return result array with unique elements
+    return result;
+  }
 
 
 /** _.filter
@@ -301,6 +318,28 @@ _.filter = function(array, func){
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
 
+    _.reject = function(array, predicate) {
+    //check if input is an array and is a function
+    if (!Array.isArray(array) || typeof predicate !== 'function') {
+      return [];
+    }
+  
+    //initialize an empty array to store elements that do not satisfy the predicate
+    let result = [];
+  
+    //iterate over each element in the array
+    for (let i = 0; i < array.length; i++) {
+      //apply function to elements
+      //if predicate function returns false, add the element to the result array
+      if (!predicate(array[i], i, array)) {
+        result.push(array[i]);
+      }
+    }
+  
+    //return the result array with elements that did not satisfy the predicate
+    return result;
+  }
+
 
 /** _.partition
 * Arguments:
@@ -320,6 +359,31 @@ _.filter = function(array, func){
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+    _.partition = function(array, predicate) {
+    //check input is an array and predicate is a function
+    if (!Array.isArray(array) || typeof predicate !== 'function') {
+      return [[], []];
+    }
+  
+    //initialize arrays to hold elements that satisfy and do not satisfy the predicate
+    let truthyArray = [];
+    let falsyArray = [];
+  
+    //iterate over each element in the array
+    for (let i = 0; i < array.length; i++) {
+      //apply the predicate function to each element
+      if (predicate(array[i], i, array)) {
+        //if predicate returns truthy, push the element to truthyArray
+        truthyArray.push(array[i]);
+      } else {
+        //if predicate returns falsy, push the element to falsyArray
+        falsyArray.push(array[i]);
+      }
+    }
+  
+    //return result as an array of two arrays
+    return [truthyArray, falsyArray];
+  }
 
 
 /** _.map
@@ -337,6 +401,33 @@ _.filter = function(array, func){
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
+    _.map = function(collection, iteratee) {
+    //initialize an empty array to store results
+    let result = [];
+  
+    //check the collection is an array
+    if (Array.isArray(collection)) {
+      //iterate over the array
+      for (let i = 0; i < collection.length; i++) {
+        //apply the iteratee function to each element
+        result.push(iteratee(collection[i], i, collection));
+      }
+    } 
+    //check if collection is an object
+    else if (typeof collection === 'object' && collection !== null) {
+      // Iterate over the object's keys
+      for (let key in collection) {
+        //chrck the property belongs to the object itself
+        if (collection.hasOwnProperty(key)) {
+          //apply the iteratee function to each value
+          result.push(iteratee(collection[key], key, collection));
+        }
+      }
+    }
+  
+    //return the result array
+    return result;
+  }
 
 
 /** _.pluck
@@ -349,7 +440,38 @@ _.filter = function(array, func){
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
-
+    _.pluck = function(array, property) {
+    //check input is an array and property is a string
+    if (!Array.isArray(array) || typeof property !== 'string') {
+      return [];
+    }
+  
+    //use _.map to create a new array with the property values
+    return _.map(array, function(item) {
+      //return the value of the specified property for each object
+      return item[property];
+    });
+  }
+  
+  //define _.map function as required by the pluck implementation
+  function map(collection, iteratee) {
+    let result = [];
+  
+    if (Array.isArray(collection)) {
+      for (let i = 0; i < collection.length; i++) {
+        result.push(iteratee(collection[i], i, collection));
+      }
+    } else if (typeof collection === 'object' && collection !== null) {
+      for (let key in collection) {
+        if (collection.hasOwnProperty(key)) {
+          result.push(iteratee(collection[key], key, collection));
+        }
+      }
+    }
+  
+    return result;
+  }
+  
 
 /** _.every
 * Arguments:
@@ -371,7 +493,34 @@ _.filter = function(array, func){
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
-
+    _.every = function(collection, predicate) {
+    //check function is provided
+    if (typeof predicate === 'function') {
+      // Iterate over the collection
+      for (let key in collection) {
+        //check the property belongs to the collection itself
+        if (collection.hasOwnProperty(key)) {
+          //call function and check the result
+          if (!predicate(collection[key], key, collection)) {
+            return false; //returns fals for any element, return false
+          }
+        }
+      }
+      return true; //if returns true for all elements, return true
+    } else {
+      //no function provided, check if all elements are truthy
+      for (let key in collection) {
+        //check the property belongs to the collection itself
+        if (collection.hasOwnProperty(key)) {
+          //switch value to boolean and check if it's falsy
+          if (!Boolean(collection[key])) {
+            return false; //if any element is falsy, return false
+          }
+        }
+      }
+      return true; //if elements are truthy, return true
+    }
+  }
 
 /** _.some
 * Arguments:
@@ -393,7 +542,34 @@ _.filter = function(array, func){
 *   _.some([1,3,5], function(e){return e % 2 === 0}) -> false
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
-
+    _.some = function(collection, predicate) {
+    //check if a function is provided
+    if (typeof predicate === 'function') {
+      //iterate over the collection
+      for (let key in collection) {
+        //check the property belongs to the collection itself
+        if (collection.hasOwnProperty(key)) {
+          //call the function and check the result
+          if (predicate(collection[key], key, collection)) {
+            return true; // If predicate returns true for any element, return true
+          }
+        }
+      }
+      return false; //if returns false for all elements, return false
+    } else {
+      //no function provided, check if at least one element is truthy
+      for (let key in collection) {
+        //check the property belongs to the collection itself
+        if (collection.hasOwnProperty(key)) {
+          //switch value to boolean and check if it's truthy
+          if (Boolean(collection[key])) {
+            return true; //if any element is truthy, return true
+          }
+        }
+      }
+      return false; //if all elements are falsy, return false
+    }
+  }
 
 /** _.reduce
 * Arguments:
@@ -413,7 +589,32 @@ _.filter = function(array, func){
 * Examples:
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
-
+    _.reduce = function(array, iteratee, seed) {
+    if (!Array.isArray(array) || typeof iteratee !== 'function') {
+      throw new TypeError('Invalid arguments');
+    }
+  
+    let hasSeed = arguments.length > 2;
+    let result;
+    let startIndex;
+  
+    if (hasSeed) {
+      result = seed;
+      startIndex = 0;
+    } else {
+      if (array.length === 0) {
+        throw new TypeError('Reduce of empty array with no initial value');
+      }
+      result = array[0];
+      startIndex = 1;
+    }
+  
+    for (let i = startIndex; i < array.length; i++) {
+      result = iteratee(result, array[i], i, array);
+    }
+  
+    return result;
+  }
 
 /** _.extend
 * Arguments:
@@ -429,7 +630,25 @@ _.filter = function(array, func){
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
-
+_.extend = function(target, ...sources) {
+    if (typeof target !== 'object' || target === null) {
+      throw new TypeError('Target must be a non-null object');
+    }
+  
+    // Iterate over each source object
+    for (const source of sources) {
+      if (typeof source === 'object' && source !== null) {
+        // Copy each property from source to target
+        for (const key in source) {
+          if (source.hasOwnProperty(key)) {
+            target[key] = source[key];
+          }
+        }
+      }
+    }
+  
+    return target;
+  }
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////
