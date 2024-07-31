@@ -370,7 +370,6 @@ _.filter = function(array, func){
         falsyArray.push(array[i]);
       }
     }
-  
     //return result as an array of two arrays
     return [truthyArray, falsyArray];
   }
@@ -391,7 +390,7 @@ _.filter = function(array, func){
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
 */
-    _.map = function(collection, iteratee) {
+    _.map = function(collection, func) {
     //initialize an empty array to store results
     let result = [];
   
@@ -399,18 +398,18 @@ _.filter = function(array, func){
     if (Array.isArray(collection)) {
       //iterate over the array
       for (let i = 0; i < collection.length; i++) {
-        //apply the iteratee function to each element
-        result.push(iteratee(collection[i], i, collection));
+        //apply the function to each element
+        result.push(func(collection[i], i, collection));
       }
     } 
     //check if collection is an object
     else if (typeof collection === 'object' && collection !== null) {
       // Iterate over the object's keys
       for (let key in collection) {
-        //chrck the property belongs to the object itself
+        //chrck the property belongs to the object 
         if (collection.hasOwnProperty(key)) {
-          //apply the iteratee function to each value
-          result.push(iteratee(collection[key], key, collection));
+          //apply the function to each value
+          result.push(func(collection[key], key, collection));
         }
       }
     }
@@ -532,32 +531,32 @@ _.filter = function(array, func){
 *   _.some([1,3,5], function(e){return e % 2 === 0}) -> false
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
-    _.some = function(collection, predicate) {
+    _.some = function(collection, func) {
     //check if a function is provided
-    if (typeof predicate === 'function') {
+    if (typeof func === 'function') {
       //iterate over the collection
       for (let key in collection) {
         //check the property belongs to the collection itself
         if (collection.hasOwnProperty(key)) {
           //call the function and check the result
-          if (predicate(collection[key], key, collection)) {
-            return true; // If predicate returns true for any element, return true
+          if (func(collection[key], key, collection)) {
+            return true; // If func returns true for any element return true
           }
         }
       }
       return false; //if returns false for all elements, return false
     } else {
-      //no function provided, check if at least one element is truthy
+      //no function provided check if at least one element is truthy
       for (let key in collection) {
         //check the property belongs to the collection itself
         if (collection.hasOwnProperty(key)) {
           //switch value to boolean and check if it's truthy
           if (Boolean(collection[key])) {
-            return true; //if any element is truthy, return true
+            return true; //if any element is truthy return true
           }
         }
       }
-      return false; //if all elements are falsy, return false
+      return false; //if all elements are falsy return false
     }
   }
 
