@@ -443,17 +443,17 @@ _.filter = function(array, func){
   }
   
   //define _.map function as required by the pluck implementation
-  function map(collection, iteratee) {
+  function map(collection, func) {
     let result = [];
   
     if (Array.isArray(collection)) {
       for (let i = 0; i < collection.length; i++) {
-        result.push(iteratee(collection[i], i, collection));
+        result.push(func(collection[i], i, collection));
       }
     } else if (typeof collection === 'object' && collection !== null) {
       for (let key in collection) {
         if (collection.hasOwnProperty(key)) {
-          result.push(iteratee(collection[key], key, collection));
+          result.push(func(collection[key], key, collection));
         }
       }
     }
@@ -482,15 +482,15 @@ _.filter = function(array, func){
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
-    _.every = function(collection, predicate) {
+    _.every = function(collection, func) {
     //check function is provided
-    if (typeof predicate === 'function') {
+    if (typeof func === 'function') {
       // Iterate over the collection
       for (let key in collection) {
         //check the property belongs to the collection itself
         if (collection.hasOwnProperty(key)) {
           //call function and check the result
-          if (!predicate(collection[key], key, collection)) {
+          if (!func(collection[key], key, collection)) {
             return false; //returns fals for any element, return false
           }
         }
@@ -578,8 +578,8 @@ _.filter = function(array, func){
 * Examples:
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
-    _.reduce = function(array, iteratee, seed) {
-    if (!Array.isArray(array) || typeof iteratee !== 'function') {
+    _.reduce = function(array, func, seed) {
+    if (!Array.isArray(array) || typeof func !== 'function') {
       throw new TypeError('Invalid arguments');
     }
   
@@ -599,7 +599,7 @@ _.filter = function(array, func){
     }
   
     for (let i = startIndex; i < array.length; i++) {
-      result = iteratee(result, array[i], i, array);
+      result = func(result, array[i], i, array);
     }
   
     return result;
@@ -624,10 +624,10 @@ _.extend = function(target, ...sources) {
       throw new TypeError('Target must be a non-null object');
     }
   
-    // Iterate over each source object
+    //iterate over each source object
     for (const source of sources) {
       if (typeof source === 'object' && source !== null) {
-        // Copy each property from source to target
+        //copy each property from source to target
         for (const key in source) {
           if (source.hasOwnProperty(key)) {
             target[key] = source[key];
