@@ -210,20 +210,20 @@ _.typeOf = function(value) {
 *   _.each(["a","b","c"], function(e,i,a){ console.log(e)});
 *      -> should log "a" "b" "c" to the console
 */
-    _.each = function(collection, callback) {
+    _.each = function(collection, func) {
     //check is the collection is an array
     if (Array.isArray(collection)) {
-      //iterate over the array and call the callback with (element, index and collection)
+      //iterate over the array and call the funcion with (element, index and collection)
       for (let i = 0; i < collection.length; i++) {
-        callback(collection[i], i, collection);
+        func(collection[i], i, collection);
       }
     } 
     //check if the collection is an object
     else if (typeof collection === 'object' && collection !== null) {
-      //iterate over the object's properties and call the callback with (value, key and collection)
+      //iterate over the object's properties and call the function with (value, key and collection)
       for (const key in collection) {
         if (collection.hasOwnProperty(key)) {
-          callback(collection[key], key, collection);
+          func(collection[key], key, collection);
         }
       }
     }
@@ -289,7 +289,7 @@ _.filter = function(array, func){
     let output = [];
     //create a for loop to iterate over our array
     for (let i = 0; i < array.length; i++){
-        //betermine if the result of invoking func is true
+        //determine if the result of invoking func is true
         if (func(array[i], i, array) === true){
             output.push(array[i]);
         }
@@ -318,25 +318,20 @@ _.filter = function(array, func){
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
 
-    _.reject = function(array, predicate) {
-    //check if input is an array and is a function
-    if (!Array.isArray(array) || typeof predicate !== 'function') {
-      return [];
-    }
-  
-    //initialize an empty array to store elements that do not satisfy the predicate
+    _.reject = function(array, func) {
+    //initialize an empty array to store elements that do not satisfy the func
     let result = [];
   
     //iterate over each element in the array
     for (let i = 0; i < array.length; i++) {
       //apply function to elements
       //if predicate function returns false, add the element to the result array
-      if (!predicate(array[i], i, array)) {
+      if (!func(array[i], i, array)) {
         result.push(array[i]);
       }
     }
   
-    //return the result array with elements that did not satisfy the predicate
+    //return the result array with elements that did not satisfy the func
     return result;
   }
 
@@ -359,24 +354,24 @@ _.filter = function(array, func){
 *   }); -> [[2,4],[1,3,5]]
 }
 */
-    _.partition = function(array, predicate) {
-    //check input is an array and predicate is a function
+    _.partition = function(array, func) {
+    //check input is an array and func is a function
     if (!Array.isArray(array) || typeof predicate !== 'function') {
       return [[], []];
     }
   
-    //initialize arrays to hold elements that satisfy and do not satisfy the predicate
+    //initialize arrays to hold elements that satisfy and do not satisfy the func
     let truthyArray = [];
     let falsyArray = [];
   
     //iterate over each element in the array
     for (let i = 0; i < array.length; i++) {
-      //apply the predicate function to each element
+      //apply the function to each element
       if (predicate(array[i], i, array)) {
-        //if predicate returns truthy, push the element to truthyArray
+        //if returns truthy, push the element to truthyArray
         truthyArray.push(array[i]);
       } else {
-        //if predicate returns falsy, push the element to falsyArray
+        //if returns falsy, push the element to falsyArray
         falsyArray.push(array[i]);
       }
     }
