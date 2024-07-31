@@ -355,23 +355,18 @@ _.filter = function(array, func){
 }
 */
     _.partition = function(array, func) {
-    //check input is an array and func is a function
-    if (!Array.isArray(array) || typeof predicate !== 'function') {
-      return [[], []];
-    }
-  
-    //initialize arrays to hold elements that satisfy and do not satisfy the func
+    //initialize arrays to hold elements
     let truthyArray = [];
     let falsyArray = [];
   
     //iterate over each element in the array
     for (let i = 0; i < array.length; i++) {
       //apply the function to each element
-      if (predicate(array[i], i, array)) {
-        //if returns truthy, push the element to truthyArray
+      if (func(array[i], i, array)) {
+        //if returns truthy push the element to truthyArray
         truthyArray.push(array[i]);
       } else {
-        //if returns falsy, push the element to falsyArray
+        //if returns falsy push the element to falsyArray
         falsyArray.push(array[i]);
       }
     }
