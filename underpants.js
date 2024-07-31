@@ -485,7 +485,7 @@ _.filter = function(array, func){
     _.every = function(collection, func) {
     //check function is provided
     if (typeof func === 'function') {
-      // Iterate over the collection
+      //iterate over the collection
       for (let key in collection) {
         //check the property belongs to the collection itself
         if (collection.hasOwnProperty(key)) {
