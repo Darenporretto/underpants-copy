@@ -3,6 +3,8 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Strict_mode
 'use strict';
 
+//Functional Library
+
 var _ = {};
 
 
@@ -20,6 +22,10 @@ var _ = {};
 *   _.identity(5) === 5
 *   _.identity({a: "b"}) === {a: "b"}
 */
+
+_.identity = function(value){
+    return value; //return the value unchanged
+}
 
 
 /** _.typeOf
@@ -42,6 +48,12 @@ var _ = {};
 * _.typeOf([1,2,3]) -> "array"
 */
 
+_.typeOf = function(value) {
+    if (value === null) return "null"; //if null is null
+    if (Array.isArray(value)) return "array"; // if array is an array
+    return typeof value; //use typeof for other types
+};
+
 
 /** _.first
 * Arguments:
@@ -61,6 +73,23 @@ var _ = {};
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
 
+_.first = function(array, number) {
+    //if first arg is an array
+    if (!Array.isArray(array)) return []; //return empty array if not
+
+    //if number is notthere or not a number return the 1st element
+    if (typeof number !== 'number') return array[0];
+
+    //if number is negative, return an empty array
+    if (number < 0) return[];
+
+    //if number is greater return entire array
+    if (number > array.length) return array;
+
+    //return 1st number in element
+    return array.slice(0, number);
+};
+
 
 /** _.last
 * Arguments:
@@ -79,6 +108,23 @@ var _ = {};
 *   _.last(["a", "b", "c"], 1) -> "c"
 *   _.last(["a", "b", "c"], 2) -> ["b", "c"]
 */
+_.last = function(array, number) {
+    //if array is first arg
+    if (!Array.isArray(array)) return[];
+
+    //if number is not a number return last element
+    if (typeof number !== 'number') return array[array.length -1];
+
+    //if number is negative return empty array
+    if (number < 0) return [];
+
+    //if number is greater than arrau return whole array
+    if (number > array.length) return array;
+
+    //return the last number
+    return array.slice(array.length - number);
+
+};
 
 
 /** _.indexOf
@@ -96,7 +142,18 @@ var _ = {};
 *   _.indexOf(["a","b","c"], "c") -> 2
 *   _.indexOf(["a","b","c"], "d") -> -1
 */
+_.indexOf = function(array, value) {
+    //check if the first arg is an array, return -1 if not an array
+    if (!Array.isArray(array)) return -1;
 
+    //loop through array to find thrst occurance of value
+    for (let i = 0; i < array.length; i++) {
+        if (array[i] === value) {
+            return i; //return thr index of if the value is found
+        }
+    }
+    return -1; //return the index if value is found
+};
 
 /** _.contains
 * Arguments:
@@ -112,6 +169,19 @@ var _ = {};
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
+
+_.contains = function(array, value) {
+    //check if the first argument is an array
+    if (!Array.isArray(array)) return false; //return false if not an array
+
+    //use the ternary operator to check for the presence of value
+    let found = false; //initialize found variable
+    for (let i = 0; i < array.length; i++) {
+        found = (array[i] === value) ? true : found; // update found if value is found
+    }
+
+    return found; //return true if found, otherwise false
+};
 
 
 /** _.each
@@ -129,7 +199,22 @@ var _ = {};
 *   _.each(["a","b","c"], function(e,i,a){ console.log(e)});
 *      -> should log "a" "b" "c" to the console
 */
-
+_.each = function(collection, func) {
+    //check if the collection is an array
+    if (Array.isArray(collection)) {
+        for (let i = 0; i < collection.length; i++) {
+            func(collection[i], i, collection); //call the function for each element
+        }
+    } 
+    //check if collection is an object
+    else if (typeof collection === 'object' && collection !== null) {
+        for (const key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                func(collection[key], key, collection); //call the function for each property
+            }
+        }
+    }
+};
 
 /** _.unique
 * Arguments:
@@ -207,7 +292,30 @@ var _ = {};
 *   3) return the new array
 * Examples:
 *   _.map([1,2,3,4], function(e){return e * 2}) -> [2,4,6,8]
+*   _.map({ a: 1, b: 2, c: 3 }, function(e){return e * 2}) -> [2,4,6,8]
 */
+
+_.map = function(collection, callback) {
+    const result = []; //create an array to hold the results
+
+    //if collection is an array
+    if (Array.isArray(collection)) {
+        for (let i = 0; i < collection.length; i++) {
+            result.push(callback(collection[i], i, collection)); //call the func with element, index, and collection
+        }
+    } else {
+        // If collection is an object
+        for (const key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                result.push(callback(collection[key], key, collection)); //call the func with value, key, and collection
+            }
+        }
+    }
+
+    return result; //return the new array
+};
+ 
+
 
 
 /** _.pluck
