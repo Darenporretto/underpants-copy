@@ -341,19 +341,19 @@ _.partition = function(array, func) {
 *   _.map({ a: 1, b: 2, c: 3 }, function(e){return e * 2}) -> [2,4,6,8]
 */
 
-_.map = function(collection, callback) {
+_.map = function(collection, func) {
     const result = []; //create an array to hold the results
 
     //if collection is an array
     if (Array.isArray(collection)) {
         for (let i = 0; i < collection.length; i++) {
-            result.push(callback(collection[i], i, collection)); //call the func with element, index, and collection
+            result.push(func(collection[i], i, collection)); //call the func with element, index, and collection
         }
     } else {
         // If collection is an object
         for (const key in collection) {
             if (collection.hasOwnProperty(key)) {
-                result.push(callback(collection[key], key, collection)); //call the func with value, key, and collection
+                result.push(func(collection[key], key, collection)); //call the func with value, key, and collection
             }
         }
     }
@@ -403,7 +403,7 @@ _.pluck = function(arrayOfObjects, property) {
 _.every = function(collection, func) {
     //create function to checck if truthy
     func = func || ((value) => !!value);
-    //i wanted to try and use the double NOT
+    //i wanted to try and use the double NOT(bang) operator
 
     //iterate through the collection
     if (Array.isArray(collection)) {
