@@ -48,9 +48,12 @@ _.identity = function(value){
 * _.typeOf([1,2,3]) -> "array"
 */
 _.typeOf = function(value) {
-    if (value === null) return "null"; //if null is null
-    if (Array.isArray(value)) return "array"; // if array is an array
-    return typeof value; //use typeof for other types
+    if (value === null) return "null"; 
+    //if null is null
+    if (Array.isArray(value)) return "array"; 
+    // if array is an array
+    return typeof value; 
+    //use typeof for other types
 };
 
 /** _.first
@@ -251,9 +254,9 @@ _.filter = function(array, func) {
 
     //use _.each to iterate over the arr
     _.each(array, function(element, index, originalArray) {
-        //call provided func and check return value
+        //call provided function and check return value
        if (func(element, index, originalArray)) {
-        //add element to resultArray if freturns true
+        //add element to resultArray if returns true
         resultArray.push(element);
        }
     });
@@ -277,7 +280,7 @@ _.reject = function(array, func) {
     const resultArray = [];
     //loop through the array
     for (let i = 0; i < array.length; i ++) {
-        //cal function and check return value
+        //call function and check return value
         if(!func(array[i], i, array)) {
             //add element to result array if returns false
             resultArray.push(array[i]);
@@ -347,13 +350,15 @@ _.map = function(collection, func) {
     //if collection is an array
     if (Array.isArray(collection)) {
         for (let i = 0; i < collection.length; i++) {
-            result.push(func(collection[i], i, collection)); //call the func with element, index, and collection
+            result.push(func(collection[i], i, collection)); 
+            //call the func with element, index, and collection
         }
     } else {
-        // If collection is an object
+        //else collection is an object
         for (const key in collection) {
             if (collection.hasOwnProperty(key)) {
-                result.push(func(collection[key], key, collection)); //call the func with value, key, and collection
+                result.push(func(collection[key], key, collection)); 
+                //call the func with value, key, and collection
             }
         }
     }
@@ -450,7 +455,7 @@ _.every = function(collection, func) {
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
 _.some = function(collection, func) {
-    //create function to checck if truthy
+    //create function to check if truthy
     func = func || ((value) => !!value);
 
     //iterate through the collection
