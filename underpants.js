@@ -47,13 +47,11 @@ _.identity = function(value){
 * _.typeOf("javascript") -> "string"
 * _.typeOf([1,2,3]) -> "array"
 */
-
 _.typeOf = function(value) {
     if (value === null) return "null"; //if null is null
     if (Array.isArray(value)) return "array"; // if array is an array
     return typeof value; //use typeof for other types
 };
-
 
 /** _.first
 * Arguments:
@@ -72,7 +70,6 @@ _.typeOf = function(value) {
 *   _.first(["a", "b", "c"], 1) -> "a"
 *   _.first(["a", "b", "c"], 2) -> ["a", "b"]
 */
-
 _.first = function(array, number) {
     //if first arg is an array
     if (!Array.isArray(array)) return []; //return empty array if not
@@ -89,7 +86,6 @@ _.first = function(array, number) {
     //return 1st number in element
     return array.slice(0, number);
 };
-
 
 /** _.last
 * Arguments:
@@ -123,9 +119,7 @@ _.last = function(array, number) {
 
     //return the last number
     return array.slice(array.length - number);
-
 };
-
 
 /** _.indexOf
 * Arguments:
@@ -169,7 +163,6 @@ _.indexOf = function(array, value) {
 * Examples:
 *   _.contains([1,"two", 3.14], "two") -> true
 */
-
 _.contains = function(array, value) {
     //check if the first argument is an array
     if (!Array.isArray(array)) return false; //return false if not an array
@@ -182,7 +175,6 @@ _.contains = function(array, value) {
 
     return found; //return true if found, otherwise false
 };
-
 
 /** _.each
 * Arguments:
@@ -225,6 +217,18 @@ _.each = function(collection, func) {
 * Examples:
 *   _.unique([1,2,2,4,5,6,5,2]) -> [1,2,4,5,6]
 */
+_.unique =function(array) {
+    const newArray = []; //initialize new array
+
+    //loop through original array
+    for (let i = 0; i < array.length; i++) {
+        //use _.indexOf to see if the value exists in newArray
+        if (_.indexOf(newArray, array[i]) === -1) {
+            newArray.push(array[i]);//add value if not already present
+        }
+    }
+    return newArray; //returns the array of new values
+};
 
 
 /** _.filter
@@ -242,7 +246,19 @@ _.each = function(collection, func) {
 * Extra Credit:
 *   use _.each in your implementation
 */
+_.filter = function(array, func) {
+    const resultArray = [];//initoalize array to hold filtered results
 
+    //use _.each to iterate over the arr
+    _.each(array, function(element, index, originalArray) {
+        //call provided func and check return value
+       if (func(element, index, originalArray)) {
+        //add element to resultArray if freturns true
+        resultArray.push(element);
+       }
+    });
+    return resultArray; //return the new array of filtered elements
+}
 
 /** _.reject
 * Arguments:
@@ -256,7 +272,19 @@ _.each = function(collection, func) {
 * Examples:
 *   _.reject([1,2,3,4,5], function(e){return e%2 === 0}) -> [1,3,5]
 */
-
+_.reject = function(array, func) {
+    //initialize a new array to hold rejected results
+    const resultArray = [];
+    //loop through the array
+    for (let i = 0; i < array.length; i ++) {
+        //cal function and check return value
+        if(!func(array[i], i, array)) {
+            //add element to result array if returns false
+            resultArray.push(array[i]);
+        }
+    }
+    return resultArray; //return array of rejected elements
+}
 
 /** _.partition
 * Arguments:
@@ -276,7 +304,25 @@ _.each = function(collection, func) {
 *   }); -> [[2,4],[1,3,5]]
 }
 */
+_.partition = function(array, func) {
+    //new arrays to hold speerate truthy and falsy values
+    const truthyArray = [];
+    const falsyArray = [];
 
+    //loop through array
+    for (let i = 0; i < array.length; i++) {
+        //call func and store the results
+        if (func(array[i], i, array)) {
+            //addto thrthy array if return truthy
+            truthyArray.push(array[i]);
+            } else {
+            //add to falsy array if returns falsy
+            falsyArray.push(array[i]);
+            }
+        }
+        //rteurn the arrays as a nested array
+        return [truthyArray, falsyArray];
+    };
 
 /** _.map
 * Arguments:
@@ -315,9 +361,6 @@ _.map = function(collection, callback) {
     return result; //return the new array
 };
  
-
-
-
 /** _.pluck
 * Arguments:
 *   1) An array of objects
@@ -328,6 +371,13 @@ _.map = function(collection, callback) {
 * Examples:
 *   _.pluck([{a: "one"}, {a: "two"}], "a") -> ["one", "two"]
 */
+_.pluck = function(arrayOfObjects, property) {
+    //must use _.map() to iterate over each object in array
+    return _.map(arrayOfObjects, function(obj) {
+        //return value of property
+        return obj[property];
+    });
+}
 
 
 /** _.every
@@ -350,7 +400,34 @@ _.map = function(collection, callback) {
 *   _.every([2,4,6], function(e){return e % 2 === 0}) -> true
 *   _.every([1,2,3], function(e){return e % 2 === 0}) -> false
 */
+_.every = function(collection, func) {
+    //create function to checck if truthy
+    func = func || ((value) => !!value);
+    //i wanted to try and use the double NOT
 
+    //iterate through the collection
+    if (Array.isArray(collection)) {
+        for (let i = 0; i < collection.length; i++) {
+            if (!func(collection[i], i, collection)) {
+                //return false if falsy
+                return false;
+            }
+        }
+    } else if (typeof collection === 'object' && collection !== null) {
+        for (const key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                if (!func(collection[key], key, collection)) {
+                    //return false if falsy
+                    return false;
+                }
+               
+            }
+        }
+    }
+    //return true if all conditiond are met
+    return true;
+
+}
 
 /** _.some
 * Arguments:
@@ -372,7 +449,32 @@ _.map = function(collection, callback) {
 *   _.some([1,3,5], function(e){return e % 2 === 0}) -> false
 *   _.some([1,2,3], function(e){return e % 2 === 0}) -> true
 */
+_.some = function(collection, func) {
+    //create function to checck if truthy
+    func = func || ((value) => !!value);
 
+    //iterate through the collection
+    if (Array.isArray(collection)) {
+        for (let i = 0; i < collection.length; i++) {
+            if (func(collection[i], i, collection)) {
+                //return true if truthy
+                return true;
+            }
+        }
+    } else if (typeof collection === 'object' && collection !== null) {
+        for (const key in collection) {
+            if (collection.hasOwnProperty(key)) {
+                if (!func(collection[key], key, collection)) {
+                    //return true
+                    return true;
+                }
+               
+            }
+        }
+    }
+    //return false if all conditiond are met
+    return false;
+}
 
 /** _.reduce
 * Arguments:
@@ -392,7 +494,29 @@ _.map = function(collection, callback) {
 * Examples:
 *   _.reduce([1,2,3], function(previousSum, currentValue, currentIndex){ return previousSum + currentValue }, 0) -> 6
 */
+_.reduce = function(array, func, seed) {
+    let previousResult;
 
+    //if seed is provided, use as previousResult
+    if (seed !== undefined) {
+    previousResult = seed;
+    for (let i = 0; i < array.length; i++) {
+        previousResult = func(previousResult, array[i], i);
+    }
+} else {
+    //if seed isnt provided use first element as prev result
+    if (array.length === 0) {
+        throw new TypeError('Reduce of empty array with no initial value');
+    }
+    previousResult = array[0];
+    for (let i = 1; i < array.length; i++) {
+        previousResult = func(previousResult, array[i], i);
+    }
+}
+
+return previousResult;
+
+};
 
 /** _.extend
 * Arguments:
@@ -408,6 +532,19 @@ _.map = function(collection, callback) {
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
+_.extend = function(target, ...sources) {
+    //sources is an array of all additional objects passed in
+    for (let i = 0; i < sources.length; i++) {
+        const source = sources[i];//declare source inside loop
+        for (let key in source) {
+            if (source.hasOwnProperty(key)) {
+                target[key] = source[key];
+                //copy properties from source to target
+            }
+        }
+    }
+    return target;//return updated target object
+};
 
 //////////////////////////////////////////////////////////////////////
 // DON'T REMOVE THIS CODE ////////////////////////////////////////////
