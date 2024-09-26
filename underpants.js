@@ -537,22 +537,22 @@ return previousResult;
 *   _.extend(data, {b:"two"}); -> data now equals {a:"one",b:"two"}
 *   _.extend(data, {a:"two"}); -> data now equals {a:"two"}
 */
-_.extend = function(target, ...sources) {
+_.extend = function(object, ...objects) {
     //iterate through each source object
-    for (const source of sources) {
+    for (const source of objects) {
         //check if source is an object
         if (source && typeof source === 'object') {
             //iterate through the properties of the source
             for (const key in source) {
                 if (source.hasOwnProperty(key)) {
                     //copy the property to the target object
-                    target[key] = source[key];
+                    object[key] = source[key];
                 }
             }
         }
     }
     //return the updated target object
-    return target;
+    return object;
 };
 
 //////////////////////////////////////////////////////////////////////
