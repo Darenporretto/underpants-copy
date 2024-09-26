@@ -511,7 +511,7 @@ _.reduce = function(array, func, seed) {
 } else {
     //if seed isnt provided use first element as prev result
     if (array.length === 0) {
-        throw new TypeError('Reduce of empty array with no initial value');
+        throw new TypeError;
     }
     previousResult = array[0];
     for (let i = 1; i < array.length; i++) {
