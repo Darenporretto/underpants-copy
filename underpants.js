@@ -502,17 +502,14 @@ _.some = function(collection, func) {
 _.reduce = function(array, func, seed) {
     let previousResult;
 
-    //if seed is provided, use as previousResult
+    //determine if seed is provided, use as previousResult
     if (seed !== undefined) {
     previousResult = seed;
     for (let i = 0; i < array.length; i++) {
         previousResult = func(previousResult, array[i], i);
     }
 } else {
-    //if seed isnt provided use first element as prev result
-    if (array.length === 0) {
-        throw new TypeError;
-    }
+   
     previousResult = array[0];
     for (let i = 1; i < array.length; i++) {
         previousResult = func(previousResult, array[i], i);
