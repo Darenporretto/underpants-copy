@@ -501,17 +501,17 @@ _.some = function(collection, func) {
 */
 _.reduce = function(array, func, seed) {
     let previousResult;
-
     //determine if seed is provided, use as previousResult
     if (seed !== undefined) {
-    previousResult = seed;
+    previousResult = seed; //assign previous result seed
     for (let i = 0; i < array.length; i++) {
+        //reassign previous result to the result invoking the callback func
         previousResult = func(previousResult, array[i], i);
     }
 } else {
-   
-    previousResult = array[0];
+    previousResult = array[0]; // assign previous result to the first item in array
     for (let i = 1; i < array.length; i++) {
+        //reassign the previous result to the result invoking the csllbsck func
         previousResult = func(previousResult, array[i], i);
     }
 }
